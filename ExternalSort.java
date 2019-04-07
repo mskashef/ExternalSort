@@ -10,20 +10,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class AAA {
+public class ExternalSort {
 
     static Scanner s = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
-        try {
         System.out.println("Please enter file address:");
         String inputFileName = s.nextLine();
-        System.out.println("Sorting started.\nCreating chunks...");
+        if (!new File(inputFileName).exists() || inputFileName == null || inputFileName.isEmpty()) {
+            System.out.println("Error: file does not exist.");
+            return;
+        }
         Sorter sorter = new Sorter(inputFileName);
         sorter.sort();
-        } catch(Exception e) {
-            System.out.println("An Error occured please re try!!! ");
-        }
     }
 }
 
@@ -37,27 +36,28 @@ class Sorter {
 
     public Sorter(String inputFileAddress) {
         this.inputFileName = inputFileAddress;
-        workFolder = inputFileName.substring(0, inputFileName.lastIndexOf("\\") == -1 ? inputFileName.length() :  inputFileName.lastIndexOf("\\") ) + "\\";
+        workFolder = inputFileName.substring(0, inputFileName.lastIndexOf("/") == -1 ? inputFileName.lastIndexOf("\\") : inputFileName.lastIndexOf("/")) + "/";
         createDirectories();
-        this.loc = workFolder + "ExternalSortTempFolder\\";
-        this.output = workFolder + "ExternalSortOutputFolder\\out.txt" ;
+        this.loc = workFolder + "ExternalSortTempFolder/";
+        this.output = workFolder + "ExternalSortOutputFolder/output.txt";
     }
 
     private void createDirectories() {
-        new File(workFolder + "ExternalSortTempFolder\\").mkdir();
-        new File(workFolder + "ExternalSortOutputFolder\\").mkdir();
+        new File(workFolder + "ExternalSortTempFolder/").mkdir();
+        new File(workFolder + "ExternalSortOutputFolder/").mkdir();
     }
 
     public void sort() throws Exception {
         double startTime = System.currentTimeMillis();
         lastTime = startTime;
+        System.out.println("Sorting started.\nCreating chunks...");
         createChunks();
         System.out.println(getTimeOf("Chunks were created in "));
         merge();
         System.out.println(getTimeOf("Chunks were merged in "));
         double cur = System.currentTimeMillis();
         System.out.println(String.format("File Sorted Seccessfully in %.3f seconds.\nDeleting temp files...", (cur - startTime) / 1000));
-        System.out.println(deleteTempFiles() ? "temp files were deleted successfully." : "temp files were not deleted successfully");
+        System.out.println(deleteTempFiles() ? "temp files were deleted successfully." : "temp files were not deleted successfully!");
         long inputSize = new File(inputFileName).length();
         long outputFileNameSize = new File(output).length();
         System.out.println("input file size: " + inputSize + " bytes");
@@ -85,7 +85,8 @@ class Sorter {
         // -- reading from original input file --
         BufferedReader reader = new BufferedReader(new FileReader(inputFileName));
         boolean fileIsFinished = false;
-        outer:while (!fileIsFinished) {
+        outer:
+        while (!fileIsFinished) {
             // -- for saving data we read --
             LongArray chunk = new LongArray(chunkSize);
             String c;
@@ -213,8 +214,6 @@ class Sorter {
         }
     }
 }
-
-
 
 class SortedArrayList {
 
