@@ -10,16 +10,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ExternalSort {
+public class AAA {
 
     static Scanner s = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
+        try {
         System.out.println("Please enter file address:");
         String inputFileName = s.nextLine();
         System.out.println("Sorting started.\nCreating chunks...");
         Sorter sorter = new Sorter(inputFileName);
         sorter.sort();
+        } catch(Exception e) {
+            System.out.println("An Error occured please re try!!! ");
+        }
     }
 }
 
@@ -33,10 +37,10 @@ class Sorter {
 
     public Sorter(String inputFileAddress) {
         this.inputFileName = inputFileAddress;
-        workFolder = inputFileName.substring(0, inputFileName.lastIndexOf("\\")) + "\\";
+        workFolder = inputFileName.substring(0, inputFileName.lastIndexOf("\\") == -1 ? inputFileName.length() :  inputFileName.lastIndexOf("\\") ) + "\\";
         createDirectories();
         this.loc = workFolder + "ExternalSortTempFolder\\";
-        this.output = workFolder + "ExternalSortOutputFolder\\" + inputFileName.substring(inputFileName.lastIndexOf("\\") + 1, inputFileName.lastIndexOf(".")) + "-[Sorted]" + inputFileName.substring(inputFileName.lastIndexOf("."), inputFileName.length());
+        this.output = workFolder + "ExternalSortOutputFolder\\out.txt" ;
     }
 
     private void createDirectories() {
@@ -266,4 +270,3 @@ class MyLong {
         return l + "";
     }
 }
-
