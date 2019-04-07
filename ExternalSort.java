@@ -209,3 +209,61 @@ class Sorter {
         }
     }
 }
+
+
+
+class SortedArrayList {
+
+    private final ArrayList<MyLong> array;
+
+    public SortedArrayList() {
+        array = new ArrayList<>();
+    }
+
+    public boolean isEmpty() {
+        return array.isEmpty();
+    }
+
+    public void add(MyLong e) {
+        int left, right, mid;
+
+        left = 0;
+        right = array.size();
+
+        while (left < right) {
+            mid = (left + right) / 2;
+            int result = (array.get(mid).l < e.l) ? -1 : (array.get(mid).l == e.l) ? 0 : 1;
+
+            if (result > 0) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        array.add(left, e);
+    }
+
+    public MyLong get(int i) {
+        return array.get(i);
+    }
+
+    public void remove(short i) {
+        array.remove(i);
+    }
+}
+
+class MyLong {
+
+    public long l;
+    public BufferedReader reader;
+
+    public MyLong(long l, BufferedReader reader) {
+        this.l = l;
+        this.reader = reader;
+    }
+
+    public String toString() {
+        return l + "";
+    }
+}
+
